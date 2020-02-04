@@ -1,0 +1,162 @@
+/*
+TIPOS DE DATOS:
+
+int(nº cifras)                  ENTERO
+integer(nº cifras)              ENTERO  (maximo 4294967295)
+varchar(nº caracteres)          STRING / ALFANUMERICO (maximo 255)
+char(nº caracteres)             STRING / ALFANUMERICO
+float(nº cifras, nº decimales)  DECIMAL / COMA FLOTANTE
+date, time, timestamp
+
+// STRING MAS GRANDES
+TEXT 65535 caracteres
+MEDIUMTEXT  16 millones
+LONGTEXT    4 billones de caracteres
+
+// ENTEROS MAS GRANDE
+MEDIUMINT
+BIGINT
+*/
+
+/*
+CREAR TABLA
+*/
+CREATE TABLE usuarios(
+id          int(11) auto_increment not null,
+nombre      varchar(100) not null,
+apellidos   varchar(255) default 'hola que tal',
+email       varchar(100) not null,
+password    varchar(255),
+CONSTRAINT pk_usuarios PRIMARY KEY(id)
+);
+
+
+# RENOMBRAR UNA TABLA #
+ALTER TABLE usuarios RENAME TO usuarios_renom;
+
+# CAMBIAR NOMBRE DE UNA COLUMNA #
+ALTER TABLE usuarios_renom CHANGE apellidos apellido varchar(100) null;
+
+# MODIFICAR COLUMNA SIN CAMBIAR NOMBRE #
+ALTER TABLE usuarios_renom MODIFY apellido char(40) not null;
+
+# AÑADIR COLUMNA #
+ALTER TABLE usuarios_renom ADD website varchar(100) null;
+
+# AÑADIR RESTRICCIÓN A COLUMNA #
+ALTER TABLE usuarios_renom ADD CONSTRAINT uq_email UNIQUE(email);
+
+# BORRAR UNA COLUMNA #
+ALTER TABLE usuarios_renom DROP website;
+
+
+
+/**************************/
+
+#BORRAR REGISTROS#
+DELETE FROM usuarios WHERE email = 'admin@admin.com';
+
+/**************************/
+
+#INSERTAR NUEVOS REGISTROS#
+INSERT INTO usuarios VALUES(null, 'Víctor', 'Apellidos', 'victor@victor.com', '1234', '2019-05-01');
+INSERT INTO usuarios VALUES(null, 'Antonio', 'Martinez', 'antonio@antonio.com', '1234', '2019-08-05');
+INSERT INTO usuarios VALUES(null, 'Paco', 'Lopez', 'paco@paco.com', '1234', '2020-05-01');
+
+
+#INSERTAR FILAS SOLO CON CIERTAS COLUMNAS#
+INSERT INTO usuarios(email, password) VALUES('admin@admin.com', 'admin'); 
+
+/**************************/
+
+#MOSTRAR TODOS REGISTROS / FILAS DE UNA TABLA#
+SELECT email, nombre, apellidos FROM usuarios;
+
+#MOSTRAR TODOS LOS CAMPOS#
+SELECT * FROM usuarios;
+
+#OPERADORES ARITMETICOS#
+SELECT email, (7+7) AS 'OPERACION' FROM usuarios;
+
+#FUNCIONES MATEMATICAS#
+SELECT CEIL(7.34) AS 'OPERACION' FROM usuarios;
+
+/**************************/
+
+#MODIFICAR FILAS / ACTUALIZAR DATOS#
+
+UPDATE usuarios SET fecha='2019-07-09', apellidos='ADMIN' WHERE id=4; 
+
+/**************************/
+
+# CONSULTA CON UNA CONDICIÓN #
+SELECT * FROM usuarios WHERE email = 'admin@admin.com';
+
+/*
+OPERADORES DE COMPARACION:
+Igual           =
+Distinto        !=
+Menor           <
+Mayor           >
+Menor o igual   <=
+Mayor o igual   >=
+Entre           between A and B
+En              in
+Es nulo         is null
+No nulo         is not null
+Como            like
+No es como      not like
+*/
+
+/*
+OPERADORES LOGICOS:
+O       OR
+Y       AND
+NO      NOT
+*/
+
+/*
+COMODINES:
+Cualquier cantidad de caracteres: %
+Un caracter desconocido: _
+*/
+
+#EJEMPLOS#
+
+# 1. Mostrar Nombre y Apellidos de todos los usuarios registrados en 2019
+SELECT nombre, apellidos FROM usuarios WHERE YEAR(fecha) = 2019;
+
+# 2. Mostrar Nombre y Apellidos de todos los usuarios QUE NO se registraron en 2019
+SELECT nombre, apellidos FROM usuarios WHERE YEAR(fecha) != 2019 OR ISNULL(fecha);
+
+# 3. Mostrar el email de los usuarios cuyo apellido contenga la letra A
+#    y que contraseña sea 1234
+SELECT email FROM usuarios WHERE apellidos LIKE '%a%' AND password = '1234';
+
+# 4. Sacar todos los registros de la tabla usuarios cuyo año sea PAR
+SELECT * FROM usuarios WHERE (YEAR(fecha)%2 = 0);
+
+# 5. Sacar todos los registro de la tabla usuarios cuyo nombre tenga más de
+#    5 letras y que se hayan registrado antes de 2020, y mostrar el nombre en mayus
+SELECT UPPER(nombre) AS 'Nombre', apellidos FROM usuarios WHERE LENGTH(nombre) > 5 AND YEAR(FECHA) < 2020;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
